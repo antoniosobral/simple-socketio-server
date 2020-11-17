@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const { Socket } = require('socket.io');
+
 
 const app = express();
 const server = http.createServer(app);
@@ -15,13 +15,12 @@ const io = require("socket.io")(server, {
 });
 
 let connectedUsers = [];
-console.log(connectedUsers);
+
 
 
 io.on("connection", (socket) => {
     console.log(`A user connected: ${socket.id}`);
     socket.emit("socket_connected", "connected");
-    socket.emit('test', 'test');
 
     socket.emit("loadMarkers", connectedUsers);
 
@@ -46,14 +45,16 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
       for (var i = 0; i < connectedUsers.length; i++) {
-        if (i.id === socket.id) {
-          connectedUsers.slice(i);
+        if (connectedUsers[i].id === socket.id) {
+          connectedUsers.splice(i,1);
         }
       }
       socket.broadcast.emit("removeMarker", socket.id);
       console.log(`user disconnected : ${socket.id}:(`);
     });
   });
+
+  app.use(cor());
 
 
 server.listen(3000);
