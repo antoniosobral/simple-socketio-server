@@ -9,10 +9,12 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server, {
     cors: {
-        origin:"*",
+        origin:"http://localhost:8080",
         methods: ["PUT, GET, POST, DELETE, OPTIONS"],
+        credentials: true
     }
 });
+
 
 let connectedUsers = [];
 
@@ -30,6 +32,7 @@ io.on("connection", (socket) => {
         id: socket.id,
         location: currentLocation,
         title: "Amb - AAA1",
+        
       };
 
       connectedUsers.push(data);
@@ -54,7 +57,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  app.use(cor());
+  app.use(cors());
 
 
 server.listen(3000);
